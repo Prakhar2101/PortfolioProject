@@ -1,0 +1,87 @@
+SELECT location,date,total_cases,total_deaths,population, total_deaths*100/total_cases as death_percantage
+FROM public."Covid_Deaths"
+WHERE location = 'India'
+
+
+
+-- COUNTRIES WITH HIGHEST INFECTION RATE
+SELECT location, MAX(infection_rate)
+FROM (
+SELECT location,date,total_cases,total_deaths,population, total_cases*100/population as infection_rate
+FROM public."Covid_Deaths"
+ORDER BY date) a
+GROUP BY location
+ORDER BY max desc
+
+-- COUNTRIES WITH HIGHEST DEATH RATE
+SELECT location, MAX(death_rate)
+FROM (
+SELECT location,date,total_cases,total_deaths,population, cast(total_deaths*100/population as float) as death_rate
+FROM public."Covid_Deaths"
+	WHERE continent is NOT NULL
+ORDER BY date) a
+GROUP BY location
+ORDER BY max desc
+
+--Let's Break things Down By Continent
+SELECT continent, MAX(death_rate)
+FROM (
+SELECT continent,date,total_cases,total_deaths,population, cast(total_deaths*100/population as numeric) as death_rate
+FROM public."Covid_Deaths"
+	WHERE continent is NOT NULL
+ORDER BY date) a
+GROUP BY continent
+ORDER BY max desc
+
+-- TOTAL DEATH COUNTS BY CONTINENT
+SELECT location,MAX(total_deaths) as death_count
+FROM public."Covid_Deaths"
+WHERE continent IS  NULL
+GROUP BY location
+ORDER BY death_count desc
+
+
+
+--Showig the continents with highest death count per population
+SELECT continent,MAX(total_deaths) as death_count
+FROM public."Covid_Deaths"
+WHERE continent IS not  NULL
+GROUP BY continent
+ORDER BY death_count desc
+
+--Global Numbers
+SELECT date, SUM(new_cases), SUM(new_deaths), SUM(new_deaths)/SUM(new_cases)*100 as Death_Percentage
+FROM public."Covid_Deaths"
+WHERE continent is NOT null
+GROUP BY date
+ORDER BY date
+--Join The Two tables
+SELECT *
+FROM public."Covid_Deaths" dea, public."Covid_Vaccinations" vacc
+WHERE dea.date = vacc.date
+AND dea.location = vacc.location
+
+--Looking At Total Population VS Total Vacciantions
+SELECT dea.location , population , SUM(new_vacciantions), SUM(new_vacciantions)/population*100
+FROM public."Covid_Deaths" dea, public."Covid_Vaccinations" vacc
+WHERE dea.date = vacc.date
+AND dea.location = vacc.location
+GROUP BY dea.location,population
+ORDER BY dea.location
+
+SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vacciantions,SUM(vac.new_vacciantions)
+OVER (Partition By dea.location)
+FROM public."Covid_Deaths" dea, public."Covid_Vaccinations" vac
+WHERE dea.date = vac.date
+AND dea.location = vac.location
+AND dea.continent is not null
+ORDER BY location,date
+
+--Date Break Down Vaccinations
+SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vacciantions,cast(vac.total_vaccinations/population*100 as float)
+FROM public."Covid_Deaths" dea, public."Covid_Vaccinations" vac
+WHERE dea.date = vac.date
+AND dea.location = vac.location
+AND dea.continent is not null
+ORDER BY location,dates
+
