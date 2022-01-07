@@ -1,0 +1,53 @@
+SELECT *
+FROM Nifty
+
+-- TOP 10 Gainers Of The YEAR
+SELECT symbol , "365 d% chng"
+FROM Nifty
+ORDER BY "365 d% chng" desc
+LIMIT 10
+
+-- TOP 5 Loosers Of The Year
+SELECT symbol , "365 d% chng"
+FROM Nifty
+ORDER BY "365 d% chng" asc
+LIMIT 5
+
+-- TOP 10 Gainers OF THE MONTH
+SELECT symbol , "30 d% chng"
+FROM Nifty
+ORDER BY "30 d% chng" desc
+LIMIT 10
+
+--TOP 5 Loosers Of The Month
+SELECT symbol , "30 d% chng"
+FROM Nifty
+ORDER BY "30 d% chng" asc
+LIMIT 5
+
+
+--BEST STOCK  OF THE DAY
+SELECT symbol , "%Chng"
+FROM Nifty
+ORDER BY "%Chng" desc
+LIMIT 1
+
+--MOST Discounted STOCKS
+SELECT symbol, open , Discount_Percentage/"52w H"*100 as Discount
+FROM (
+SELECT symbol, open , "52w H"-open as Discount_Percentage, "52w H"
+FROM Nifty) a
+ORDER BY Discount desc
+LIMIT 10
+
+-- Worst Stock Of The Day
+SELECT symbol , "%Chng"
+FROM Nifty
+ORDER BY "%Chng" asc
+LIMIT 1
+
+--Most Traded Stock
+SELECT symbol , "Volume(lacs)"
+FROM Nifty
+Order BY "Volume(lacs)" desc
+LIMIT 10
