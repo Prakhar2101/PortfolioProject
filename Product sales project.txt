@@ -1,0 +1,217 @@
+--MERGE ALL THE TABLES TOGETHER
+SELECT * 
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id
+ 
+-- LIST OF ALL TYPES OF GENDER( TOTAL 8 TYPES )
+SELECT DISTINCT gender
+FROM public.customers
+
+--UNIQUE CUSTOMERS (1000)
+SELECT DISTINCT customer_name
+FROM public.customers
+
+--DIFFERENT CITIES (961)
+SELECT DISTINCT city
+FROM public.customers
+
+--DIFFERENT PRODUCT TYPE (3)
+SELECT Distinct product_type
+FROM public.products
+
+-- DIFFERENT PRODUCT NAME (35)
+SELECT Distinct product_name
+FROM public.products
+
+--WHICH PRODUCTS WERE SOLD THE MOST IN LAST MONTH
+SELECT product_type,product_name,SUM(sales) as total_sales
+FROM (SELECT product_name,product_type,p.quantity*p.price as sales,order_date
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id) a
+WHERE order_date >= '2021-9-24'
+AND order_date <= '2021-10-24'
+GROUP BY product_type,product_name
+ORDER BY total_sales desc
+
+--SALES OVER MONTHS
+SELECT 
+SUM(CASE WHEN order_date>= '2021-01-01' AND order_date <='2021-01-31' THEN (SELECT sales FROM(SELECT SUM(price*quantity) as sales , order_date
+FROM (SELECT p.price,p.quantity,order_date
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id) a
+GROUP BY order_date
+ORDER BY order_date) g WHERE g.order_date=b.order_date) END) as January,
+SUM(CASE WHEN order_date>= '2021-02-01' AND order_date <='2021-02-28' THEN (SELECT sales FROM(SELECT SUM(price*quantity) as sales , order_date
+FROM (SELECT p.price,p.quantity,order_date
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id) a
+GROUP BY order_date
+ORDER BY order_date) g WHERE g.order_date=b.order_date)END) as February,
+SUM(CASE WHEN order_date>= '2021-03-01' AND order_date <='2021-03-31' THEN (SELECT sales FROM(SELECT SUM(price*quantity) as sales , order_date
+FROM (SELECT p.price,p.quantity,order_date
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id) a
+GROUP BY order_date
+ORDER BY order_date) g WHERE g.order_date=b.order_date)END) as March,
+SUM(CASE WHEN order_date>= '2021-04-01' AND order_date <='2021-04-30' THEN (SELECT sales FROM(SELECT SUM(price*quantity) as sales , order_date
+FROM (SELECT p.price,p.quantity,order_date
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id) a
+GROUP BY order_date
+ORDER BY order_date) g WHERE g.order_date=b.order_date)END) as April,
+SUM(CASE WHEN order_date>= '2021-05-01' AND order_date <='2021-05-31' THEN (SELECT sales FROM(SELECT SUM(price*quantity) as sales , order_date
+FROM (SELECT p.price,p.quantity,order_date
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id) a
+GROUP BY order_date
+ORDER BY order_date) g WHERE g.order_date=b.order_date)END) as May,
+SUM(CASE WHEN order_date>= '2021-06-01' AND order_date <='2021-06-30' THEN (SELECT sales FROM(SELECT SUM(price*quantity) as sales , order_date
+FROM (SELECT p.price,p.quantity,order_date
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id) a
+GROUP BY order_date
+ORDER BY order_date) g WHERE g.order_date=b.order_date)END) as June,
+SUM(CASE WHEN order_date>= '2021-07-01' AND order_date <='2021-07-31' THEN (SELECT sales FROM(SELECT SUM(price*quantity) as sales , order_date
+FROM (SELECT p.price,p.quantity,order_date
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id) a
+GROUP BY order_date
+ORDER BY order_date) g WHERE g.order_date=b.order_date)END) as July,
+SUM(CASE WHEN order_date>= '2021-08-01' AND order_date <='2021-08-31' THEN (SELECT sales FROM(SELECT SUM(price*quantity) as sales , order_date
+FROM (SELECT p.price,p.quantity,order_date
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id) a
+GROUP BY order_date
+ORDER BY order_date) g WHERE g.order_date=b.order_date)END) as August,
+SUM(CASE WHEN order_date>= '2021-09-01' AND order_date <='2021-09-30' THEN (SELECT sales FROM(SELECT SUM(price*quantity) as sales , order_date
+FROM (SELECT p.price,p.quantity,order_date
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id) a
+GROUP BY order_date
+ORDER BY order_date) g WHERE g.order_date=b.order_date)END) as September,
+SUM(CASE WHEN order_date>= '2021-10-01' AND order_date <='2021-10-31' THEN (SELECT sales FROM(SELECT SUM(price*quantity) as sales , order_date
+FROM (SELECT p.price,p.quantity,order_date
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id) a
+GROUP BY order_date
+ORDER BY order_date) g WHERE g.order_date=b.order_date)END) as October
+FROM(
+SELECT SUM(price*quantity) as sales , order_date
+FROM (SELECT p.price,p.quantity,order_date
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id) a
+GROUP BY order_date
+ORDER BY order_date) b
+
+
+-- GENDER DISTRIBUTION
+
+SELECT gender,SUM(price*quantity) as sales
+FROM (SELECT gender, p.price,p.quantity
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id) a
+GROUP BY gender
+ORDER BY sales
+
+
+-- State Distribution Of sales
+ SELECT state,SUM(total_price) as sales   
+ FROM (SELECT state,total_price
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id
+ ) a
+ GROUP BY state
+ ORDER BY sales desc
+ 
+ --City Distribution Of Sales
+  SELECT  city,SUM(total_price) as sales
+ FROM (SELECT  city,total_price
+FROM public.customers c
+INNER JOIN public.orders o
+ON c.customer_id=o.customer_id
+INNER JOIN public.sales s
+ON s.order_id=o.order_id
+INNER JOIN public.products p
+ON p.product_id = s.product_id
+ ) a
+ GROUP BY  city
+ ORDER BY sales desc
+
+ 
+
+
